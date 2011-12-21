@@ -50,6 +50,7 @@ PHP_FUNCTION(bitset_from_hash);
 PHP_FUNCTION(bitset_to_array);
 PHP_FUNCTION(bitset_from_array);
 PHP_FUNCTION(bitset_is_empty);
+PHP_FUNCTION(bitset_count);
 
 /* 
   	Declare any global variables you may need between the BEGIN

@@ -70,6 +70,7 @@ function_entry bitset_functions[] = {
 	PHP_FE(bitset_to_array, NULL)
 	PHP_FE(bitset_from_array, NULL)
 	PHP_FE(bitset_is_empty, NULL)
+	PHP_FE(bitset_count, NULL)
 	{NULL, NULL, NULL}	/* Must be the last line in bitset_functions[] */
 };
 /* }}} */
@@ -846,6 +847,41 @@ PHP_FUNCTION(bitset_is_empty)
 			RETURN_FALSE;
 	
 	RETURN_TRUE;
+}
+/* }}} */
+
+/* {{{ proto bool bitset_count(string bitset)
+   Return number of set bits in the bitset */
+
+int bitcount(unsigned long v) {
+	v = v - ((v >> 1) & 0x55555555);						 // reuse input as temporary
+	v = (v & 0x33333333) + ((v >> 2) & 0x33333333);			 // temp
+	return ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;   // count
+}
+
+PHP_FUNCTION(bitset_count)
+{
+	long len;
+	unsigned char *bitset_data;
+	long count;
+	long total = 0;
+	
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &bitset_data, &len) == FAILURE) {
+		return;
+	}
+
+	for( count = 0; count < len/(short)sizeof(unsigned long); count++ ) {
+		total += bitcount(((unsigned long *)bitset_data)[ count ]);
+	}
+
+	unsigned long v = 0;
+	for( count = len - len % sizeof(unsigned long); count < len; count++ ) {
+		v = (v << 8) | bitset_data[ count ];
+	}
+	total += bitcount(v);
+
+	RETURN_LONG(total);
 }
 /* }}} */
 
