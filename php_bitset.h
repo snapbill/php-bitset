@@ -45,6 +45,7 @@ PHP_FUNCTION(bitset_subset);
 PHP_FUNCTION(bitset_equal);
 PHP_FUNCTION(bitset_to_string);
 PHP_FUNCTION(bitset_from_string);
+PHP_FUNCTION(bitset_from_bytes);
 PHP_FUNCTION(bitset_to_hash);
 PHP_FUNCTION(bitset_from_hash);
 PHP_FUNCTION(bitset_to_array);
